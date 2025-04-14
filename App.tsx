@@ -1,131 +1,215 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+// import React, { useEffect, useState } from "react";
+// import {
+//   View,
+//   Text,
+//   Platform,
+//   StatusBar,
+//   TouchableOpacity,
+//   Alert,
+//   PermissionsAndroid,
+//   StyleSheet,
+// } from "react-native";
+// import { Camera, CameraType } from "react-native-camera-kit";
+
+// const App = () => {
+//   const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
+
+//   useEffect(() => {
+//     const requestCameraPermission = async () => {
+//       try {
+//         const granted: any = await PermissionsAndroid.request(
+//           PermissionsAndroid.PERMISSIONS.CAMERA
+//         );
+//         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+//           setHasCameraPermission(true);
+//         } else {
+//           setHasCameraPermission(false);
+//         }
+//       } catch (err) {
+//         setHasCameraPermission(false);
+//         return false;
+//       }
+//     };
+
+//     requestCameraPermission();
+//   }, []);
+
+//   const handleBarcodeScan = (event: any) => {
+//     try {
+//       const scannedValue = event.nativeEvent.codeStringValue;
+//       console.log("Scanned value:", scannedValue);
+
+//       // You can also show an alert with the scanned value
+//       Alert.alert(
+//         "Scan Successful",
+//         `Scanned value: ${scannedValue}`,
+//         [
+//           { text: "OK", onPress: () => console.log("OK Pressed") }
+//         ]
+//       );
+//     } catch (error) {
+//       console.error("Error scanning barcode:", error);
+//       Alert.alert(
+//         "Error",
+//         "Something went wrong! Please try again"
+//       );
+//     }
+//   };
+
+//   const renderCameraView = () => {
+//     if (hasCameraPermission) {
+//       return (
+//         <View style={styles.cameraHeader}>
+//           <View style={styles.frameOverlay}>
+//             <Camera
+//               style={styles.camera}
+//               cameraType={CameraType.Back}
+//               scanBarcode={true}
+//               showFrame={true} // Show frame for better UX
+//               laserColor="red" // Add laser effect
+//               frameColor="white" // Frame color
+//               onReadCode={handleBarcodeScan}
+//               // Optional: configure which barcode types to scan
+//               barcodeScannerOptions={{
+//                 barcodeTypes: [
+//                   "qr",
+//                   "pdf417",
+//                   "upc_e",
+//                   "upc_a",
+//                   "ean_8",
+//                   "ean_13",
+//                   "code_128",
+//                   "code_39",
+//                   "code_93",
+//                   "itf",
+//                   "codabar",
+//                   "datamatrix",
+//                   "aztec",
+//                 ],
+//               }}
+//             />
+//           </View>
+//         </View>
+//       );
+//     } else if (hasCameraPermission === false) {
+//       return (
+//         <View style={styles.permissionDenied}>
+//           <Text style={styles.permissionText}>
+//             Camera permission was denied. Please enable it in settings.
+//           </Text>
+//         </View>
+//       );
+//     }
+//     return null;
+//   };
+
+//   return <>{renderCameraView()}</>;
+// };
+
+// const styles = StyleSheet.create({
+//   modalOverlay: {
+//     padding: 0,
+//     margin: 0,
+//     alignItems: "center",
+//     justifyContent: "center",
+//   },
+//   modalContainer: {
+//     flex: 1,
+//     width: "100%",
+//     height: "100%",
+//     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 30,
+//     backgroundColor: "#b2b2b2",
+//   },
+//   frameOverlay: {
+//     borderWidth: 3,
+//     borderColor: "green",
+//     justifyContent: "center",
+//     alignItems: "center",
+//     alignSelf: "center",
+//   },
+//   cameraHeader: {
+//     flex: 1,
+//     justifyContent: "center",
+//     alignItems: "center",
+//     backgroundColor: "#000",
+//     alignSelf: "center",
+//     width: "100%",
+//   },
+//   camera: {
+//     width: 400,
+//     height: 400,
+//     justifyContent: "center",
+//     alignItems: "center",
+//     alignSelf: "center",
+//   },
+//   permissionDenied: {
+//     flex: 1,
+//     justifyContent: "center",
+//     alignItems: "center",
+//     padding: 20,
+//   },
+//   permissionText: {
+//     color: "red",
+//     fontSize: 18,
+//     textAlign: "center",
+//   },
+//   frameBorder: {
+//     width: 250,
+//     height: 250,
+//   },
+//   headerView: {
+//     marginTop: 100,
+//     marginBottom: 100,
+//   },
+//   headerText: {
+//     textAlign: "center",
+//     fontSize: 16,
+//     fontFamily: "Roboto-Regular",
+//     fontWeight: "800",
+//     color: "#000",
+//   },
+//   closeBtn: {
+//     marginTop: 100,
+//     marginBottom: 100,
+//     backgroundColor: "#0477FF",
+//     height: 45,
+//     width: "50%",
+//     alignSelf: "center",
+//     alignItems: "center",
+//     justifyContent: "center",
+//     borderRadius: 5,
+//   },
+//   closeBtnText: {
+//     fontSize: 16,
+//     textAlign: "center",
+//     color: "#fff",
+//     fontWeight: "bold",
+//   },
+// });
+
+// export default App;
 
 import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { AppNavigator } from './src/navigation';
+import { Provider } from "react-redux";
+import { store } from './src/reducers/store';
+import { PersistGate } from "redux-persist/integration/react";
+import { persistStore } from "redux-persist";
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+const bg = require('./src/assets/images/background.jpg');
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+const App = () => {
+  let persistor = persistStore(store);
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <NavigationContainer>
+          <AppNavigator />
+        </NavigationContainer>
+      </PersistGate>
+    </Provider>
   );
-}
-
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  /*
-   * To keep the template simple and small we're adding padding to prevent view
-   * from rendering under the System UI.
-   * For bigger apps the recommendation is to use `react-native-safe-area-context`:
-   * https://github.com/AppAndFlow/react-native-safe-area-context
-   *
-   * You can read more about it here:
-   * https://github.com/react-native-community/discussions-and-proposals/discussions/827
-   */
-  const safePadding = '5%';
-
-  return (
-    <View style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        style={backgroundStyle}>
-        <View style={{paddingRight: safePadding}}>
-          <Header/>
-        </View>
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-            paddingHorizontal: safePadding,
-            paddingBottom: safePadding,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+};
 
 export default App;
